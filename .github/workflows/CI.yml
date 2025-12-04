@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'  # Instalar Java 17
-          distribution: 'OpenJDK'  # Usar AdoptOpenJDK o OpenJDK
+          distribution: 'temurin'  # Usar AdoptOpenJDK o OpenJDK
           cache: maven  # Habilitar cache para Maven
       
       # Paso 3: Configurar Maven 3.6 o superior
