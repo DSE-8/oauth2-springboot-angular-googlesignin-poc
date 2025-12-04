@@ -1,0 +1,31 @@
+name: Pr_time
+
+on:
+  pull_request:
+    types:
+      - closed
+jobs:
+  runs-on: ubuntu-latest
+  steps:
+  - name: Check out
+    uses: actions/checkout@v3
+  - name: obtener info
+    uses: actions/github-script@v6
+    with:
+      script: |
+        const pr = await github.rest.pulls.get({
+          owner: context.repo.owner,
+          repo: context.repo.repo,
+          pull_number: context.payload.pull_request.number
+        });
+        
+        // Verificar si la PR fue fusionada
+        if (pr.data.merged) {
+          const created_at = new Date(pr.data.created_at);
+          const merged_at = new Date(pr.data.merged_at);
+          const diffInMilliseconds = merged_at - created_at;
+          const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+          console.log(`La PR fue fusionada después de ${diffInHours.toFixed(2)} horas.`);
+        } else {
+          console.log('La PR no fue fusionada.');
+        }
