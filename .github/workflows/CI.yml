@@ -40,7 +40,10 @@ jobs:
 
       # Paso 5: Instalar dependencias de Node.js
       - name: Install Node.js dependencies
-        run: npm install  # Instala dependencias de Node.js
+        run: |
+          cd ag-prueba-front
+          npm install  # Instala dependencias de Node.js
+          cd ..
 
       # Paso 6: Configurar MySQL 8
       - name: Set up MySQL 8
