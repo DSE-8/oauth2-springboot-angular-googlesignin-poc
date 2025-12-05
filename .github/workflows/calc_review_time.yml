@@ -1,0 +1,44 @@
+name: Calculate Review Response Time
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  calc-review-time:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download timestamp artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-${{ github.event.pull_request.number }}-timestamp
+
+      - name: Read timestamp
+        id: read
+        run: |
+          ts=$(cat timestamp.txt)
+          echo "creation=$ts" >> $GITHUB_OUTPUT
+
+      - name: Calculate hours between timestamps
+        id: diff
+        run: |
+          creation="${{ steps.read.outputs.creation }}"
+          review="${{ github.event.review.submitted_at }}"
+
+          secs=$(( $(date -d "$review" +%s) - $(date -d "$creation" +%s) ))
+          hours=$(echo "scale=2; $secs/3600" | bc)
+
+          echo "hours=$hours" >> $GITHUB_OUTPUT
+
+      - name: Comment result on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const hours = "${{ steps.diff.outputs.hours }}";
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `⏱️ **Tiempo de respuesta del primer review:** ${hours} horas`
+            });

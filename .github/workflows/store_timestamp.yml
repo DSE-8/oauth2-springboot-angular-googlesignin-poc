@@ -1,0 +1,25 @@
+name: Store PR Creation Timestamp
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  save-timestamp:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Get PR creation timestamp
+        id: timestamp
+        run: |
+          echo "timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_OUTPUT
+
+      - name: Save timestamp as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-${{ github.event.pull_request.number }}-timestamp
+          path: timestamp.txt
+
+      - name: Write timestamp to file
+        run: |
+          echo "${{ steps.timestamp.outputs.timestamp }}" > timestamp.txt
