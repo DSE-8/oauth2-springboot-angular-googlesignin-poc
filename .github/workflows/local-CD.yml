@@ -1,0 +1,28 @@
+name: Local CD
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start timer
+        id: timer
+        run: echo "START_TIME=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Build Docker
+        run: docker compose build
+
+      - name: Deploy (restart)
+        run: docker compose up -d
+
+      - name: Deployment Time
+        run: |
+          END_TIME=$(date +%s)
+          ELAPSED=$((END_TIME - $START_TIME))
+          echo "Deployment took $ELAPSED seconds."

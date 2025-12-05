@@ -1,0 +1,11 @@
+﻿{
+  "agentId": 21,
+  "agentName": "CD",
+  "poolId": 1,
+  "poolName": "Default",
+  "serverUrl": "https://pipelinesghubeus22.actions.githubusercontent.com/EaBZ28z8aVJVj5V1PIA8NvxZzj3L8RF85ZIJoDM8iVlKZZKyMz/",
+  "gitHubUrl": "https://github.com/DSE-8/oauth2-springboot-angular-googlesignin-poc",
+  "workFolder": "_work",
+  "useV2Flow": true,
+  "serverUrlV2": "https://broker.actions.githubusercontent.com/"
+}
