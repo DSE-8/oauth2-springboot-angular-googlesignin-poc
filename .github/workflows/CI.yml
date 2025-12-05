@@ -1,0 +1,63 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Paso 1: Revisar el código del repositorio
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      # Paso 2: Configurar Java 17
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'  # Instalar Java 17
+          distribution: 'temurin'  # Usar AdoptOpenJDK o OpenJDK
+          cache: maven  # Habilitar cache para Maven
+      
+      # Paso 3: Configurar Maven 3.6 o superior
+      - name: Set up Maven
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y maven
+          mvn -v  # Verificar que Maven está correctamente instalado
+
+      # Paso 4: Configurar Node.js 18
+      - name: Set up Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Usar Node.js 18 o superior
+
+      # Paso 5: Instalar dependencias de Node.js
+      - name: Install Node.js dependencies
+        run: |
+          cd ag-prueba-front
+          npm install  # Instala dependencias de Node.js
+          cd ..
+
+      # Paso 6: Configurar MySQL 8
+      - name: Set up MySQL 8
+        uses: devcontainers/action@v1
+        with:
+          image: mysql:8  # Usar la imagen oficial de MySQL 8
+          container-name: mysql-8
+          options: --health-cmd="mysqladmin ping --silent" --health-timeout=30s --health-retries=3
+
+      # Paso 7: Esperar que MySQL esté listo
+      - name: Wait for MySQL to start
+        run: |
+          while ! nc -z localhost 3306; do
+            echo "Esperando MySQL..."
+            sleep 1
+          done
+          echo "MySQL está listo"
