@@ -1,0 +1,51 @@
+version: "3.9"
+
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: oauth2-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: oauth2db
+      MYSQL_USER: oauth2user
+      MYSQL_PASSWORD: oauth2pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: oauth2-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/oauth2db
+      SPRING_DATASOURCE_USERNAME: oauth2user
+      SPRING_DATASOURCE_PASSWORD: oauth2pass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # Variables adicionales necesarias para Google OAuth
+      GOOGLE_CLIENT_ID: "CAMBIA_ESTE_ID"
+      GOOGLE_CLIENT_SECRET: "CAMBIA_ESTE_SECRET"
+      GOOGLE_REDIRECT_URI: "http://localhost:8080/login/oauth2/code/google"
+    depends_on:
+      - mysql
+
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: oauth2-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
