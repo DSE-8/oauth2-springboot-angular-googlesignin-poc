@@ -1,0 +1,21 @@
+name: Create Release with Binaries
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Backend JAR
+        run: mvn -pl authorization-server -am clean package -DskipTests
+      - name: Build Frontend
+        run: cd ag-prueba-front && npm ci && npm run build
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            authorization-server/target/*.jar
+            ag-prueba-front/dist/**/*
+        generate_release_notes: true
