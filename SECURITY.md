@@ -1,4 +1,4 @@
-# Informacion deseguridad y datos relevantes a esta del proyecto.
+# Informacion de seguridad y datos relevantes a esta del proyecto.
 
 ## Responsables:
 
