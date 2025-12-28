@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directories:
+      - "/"
+      - "/Backend"
+      - "/Frontend"
+    schedule:
+      interval: "weekly"
+    ignore:
+      - dependency-name: "mysql"
+        update-types: ["version-update:semver-major"]
