@@ -10,10 +10,8 @@ RUN npm install
 COPY ./ag-prueba-front ./
 
 # Crear build de producción Angular
-RUN npm run build
-
-# Servir el build con "serve"
-RUN npm install -g serve
+RUN npm run build \
+&& npm install -g serve
 
 EXPOSE 4200
 

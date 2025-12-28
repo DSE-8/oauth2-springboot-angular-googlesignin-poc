@@ -20,7 +20,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: Backend/Dockerfile
     container_name: oauth2-backend
     ports:
       - "8080:8080"
@@ -40,7 +40,7 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: frontend/Dockerfile
+      dockerfile: Frontend/Dockerfile
     container_name: oauth2-frontend
     ports:
       - "4200:4200"
